@@ -6,18 +6,88 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
+var cookBookApp = new CookBookApp(new RecipesRepository(), new RecipesConsoleUserInteraction());
+cookBookApp.Run();
+
+public class CookBookApp
+{
+    private readonly IRecipesRepository _recipesRepository;
+    private readonly IRecipesUserInteraction _recipesUserInteraction;
 
 
-var cookBook = new CookBook();
-cookBook.PrintExistingRecipes();
-Console.WriteLine("Create a new cookie recipe! Available ingredients are:");
-cookBook.PrintAvailableIngredients();
-cookBook.CreateNewRecipe();
+    public CookBookApp(IRecipesRepository recipesRepository, IRecipesUserInteraction recipesUserInteraction)
+    {
+        _recipesRepository = recipesRepository;
+        _recipesUserInteraction = recipesUserInteraction;
+    }
+
+    public void Run()
+    {
+        var allRecipes = _recipesRepository.Read(filePath);
+        _recipesUserInteraction.PrintExistingRecipes(allRecipes);
+
+        _recipesUserInteraction.PromptToCreateNewRecipe();
+
+        var ingredients = _recipesUserInteraction.ReadIngredientsFromUsers();
+
+        if (ingredients.Count > 0)
+        {
+            var recipe = new Recipe(ingredients);
+            allRecipes.Add(recipe);
+            _recipesRepository.Write(filePath, allRecipes);
+            _recipesUserInteraction.ShowMessage("Recipe added:");
+            _recipesUserInteraction.ShowMessage(recipe.ToString());
+        }
+        else
+        {
+            _recipesUserInteraction.ShowMessage(
+                "No ingredients have been selected." +
+                "Recipe will not be saved."
+            );
+        }
+
+    }
+}
+
+
+public interface IRecipesUserInteraction
+{
+    void ShowMessage(string message);
+}
+
+public class RecipesConsoleUserInteraction : IRecipesUserInteraction
+{
+    public void ShowMessage(string message)
+    {
+        System.Console.WriteLine(message);
+    }
+}
+
+public interface IRecipesRepository
+{
+
+}
+
+public class RecipesRepository : IRecipesRepository
+{
+
+}
+
+
+
+
+
+
+// var cookBook = new CookBook();
+// cookBook.PrintExistingRecipes();
+// Console.WriteLine("Create a new cookie recipe! Available ingredients are:");
+// cookBook.PrintAvailableIngredients();
+// cookBook.CreateNewRecipe();
 
 
 public class CookBook
 {
-    public List<Recipe> Recipes { get; } = new List<Recipe>();
+    public List<Recipe> Recipes { get; } = new();
 
     public List<Ingredient> allIngredients = new List<Ingredient>
         {
@@ -31,7 +101,7 @@ public class CookBook
             new CocoaPowder(),
         };
 
-    private string _filePath = "recipe.txt";
+    private string _filePath = "recipe.json";
     public void ReadRecipes()
     {
         List<string> recipeIdsList = new TxtFileOperation().ReadFromFile(_filePath);
@@ -188,107 +258,7 @@ public class TxtFileOperation : FileOperation
 }
 
 
-public class Recipe
-{
-    public List<Ingredient> Ingredients { get; }
 
-    public Recipe(List<Ingredient> ingredientLists)
-    {
-        Ingredients = ingredientLists;
-    }
-
-    public void PrintSingleRecipe()
-    {
-        var result = "";
-        for (int i = 0; i < Ingredients.Count; i++)
-        {
-            result = result + $"{Ingredients[i].Name}. {Ingredients[i].PrepareInstruction}{Environment.NewLine}";
-        }
-        Console.WriteLine(result);
-    }
-}
-
-public abstract class Ingredient
-{
-
-    public abstract int ID { get; }
-
-    public virtual string Name => "some ingredient";
-
-    public abstract string PrepareInstruction { get; }
-}
-
-public class WheatFlour : Ingredient
-{
-    public override int ID { get; } = 1;
-
-    public override string Name { get; } = "Wheat flour";
-
-    public override string PrepareInstruction { get; } = "Sieve. Add to other ingredients.";
-}
-
-public class CoconutFlour : Ingredient
-{
-    public override int ID { get; } = 2;
-
-    public override string Name { get; } = "Coconut flour";
-
-    public override string PrepareInstruction { get; } = "Sieve. Add to other ingredients.";
-}
-
-public class Butter : Ingredient
-{
-    public override int ID { get; } = 3;
-
-    public override string Name { get; } = "Butter";
-
-    public override string PrepareInstruction { get; } = "Melt on low heat. Add to other ingredients.";
-}
-
-public class Chocolate : Ingredient
-{
-    public override int ID { get; } = 4;
-
-    public override string Name { get; } = "Chocolate";
-
-    public override string PrepareInstruction { get; } = "Melt in a water bath. Add to other ingredients.";
-}
-
-public class Sugar : Ingredient
-{
-    public override int ID { get; } = 5;
-
-    public override string Name { get; } = "Sugar";
-
-    public override string PrepareInstruction { get; } = "Add to other ingredients.";
-}
-
-public class Cardamom : Ingredient
-{
-    public override int ID { get; } = 6;
-
-    public override string Name { get; } = "Cardamom";
-
-    public override string PrepareInstruction { get; } = "Take half a teaspoon. Add to other ingredients.";
-}
-
-public class Cinnamon : Ingredient
-{
-    public override int ID { get; } = 7;
-
-    public override string Name { get; } = "Cinnamon";
-
-    public override string PrepareInstruction { get; } = "Take half a teaspoon. Add to other ingredients.";
-}
-
-public class CocoaPowder : Ingredient
-{
-    public override int ID { get; } = 8;
-
-    public override string Name { get; } = "Cocoa powder";
-
-    public override string PrepareInstruction { get; } = "Add to other ingredients.";
-}
 
 
 
