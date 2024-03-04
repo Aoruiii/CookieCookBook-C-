@@ -2,7 +2,7 @@ namespace CookieCookbook.Recipes.Ingredients
 {
     public class Chocolate : Ingredient
     {
-        public override int ID { get; } = 4;
+        public override int Id { get; } = 4;
 
         public override string Name { get; } = "Chocolate";
 

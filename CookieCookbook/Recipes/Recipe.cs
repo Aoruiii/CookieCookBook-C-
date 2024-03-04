@@ -11,16 +11,15 @@ namespace CookieCookbook.Recipes
             Ingredients = ingredients;
         }
 
-        public void PrintSingleRecipe()
+        public override string ToString()
         {
-            var result = "";
+            var steps = new List<string>();
             foreach (Ingredient ingredient in Ingredients)
             {
-                result = result + $"{ingredient.Name}. {ingredient.PrepareInstruction}{Environment.NewLine}";
+                steps.Add($"{ingredient.Name}. {ingredient.PrepareInstruction}");
             }
-            Console.WriteLine(result);
+            return string.Join(Environment.NewLine, steps);
         }
     }
-
 }
 
