@@ -1,15 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using System.Net.NetworkInformation;
-using System.Text.Json.Nodes;
-using System.Text.Json;
-using System.IO;
-using System.Collections.Generic;
 using CookieCookbook.Recipes;
 using CookieCookbook.Recipes.Ingredients;
 using CookieCookbook.DataAccess;
 using CookieCookbook.FileAccess;
 using CookieCookbook.App;
 
+// try
+// {
 const FileFormat Format = FileFormat.Json;
 
 IStringsRepository stringsRepository = Format == FileFormat.Json ?
@@ -26,4 +23,11 @@ new RecipesConsoleUserInteraction(ingredientRegister));
 
 cookBookApp.Run(filePath);
 
+// }
+// catch (Exception ex)
+// {
+//     System.Console.WriteLine("Sorry! The application is experiencing an unexpected error," +
+//     "and will have to be closed." +
+//     "Error Message:" + ex.Message);
+// }
 

@@ -12,3 +12,4 @@
 /Users/aorui.tan/Desktop/Web Developer/C#/Cookie Cookbook/CookieCookbook/obj/Debug/net8.0/CookieCookbook.pdb
 /Users/aorui.tan/Desktop/Web Developer/C#/Cookie Cookbook/CookieCookbook/obj/Debug/net8.0/CookieCookbook.genruntimeconfig.cache
 /Users/aorui.tan/Desktop/Web Developer/C#/Cookie Cookbook/CookieCookbook/obj/Debug/net8.0/ref/CookieCookbook.dll
+/Users/aorui.tan/Desktop/Web Developer/C#/Cookie Cookbook/CookieCookbook/obj/Debug/net8.0/CookieCookbook.sourcelink.json

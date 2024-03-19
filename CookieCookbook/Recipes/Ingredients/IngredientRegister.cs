@@ -16,15 +16,17 @@ namespace CookieCookbook.Recipes.Ingredients
 
         public Ingredient GetById(int Id)
         {
-            foreach (Ingredient ingredient in All)
-            {
-                if (ingredient.Id == Id)
-                {
-                    return ingredient;
-                }
-            }
 
-            return null;
+            return All.Where(ingredient => ingredient.Id == Id).First();
+            // foreach (Ingredient ingredient in All)
+            // {
+            //     if (ingredient.Id == Id)
+            //     {
+            //         return ingredient;
+            //     }
+            // }
+
+            // return null;
         }
     }
 

@@ -1,5 +1,6 @@
 using CookieCookbook.Recipes.Ingredients;
 using CookieCookbook.DataAccess;
+using System.Xml.XPath;
 
 namespace CookieCookbook.Recipes;
 
@@ -18,21 +19,16 @@ public class RecipesRepository : IRecipesRepository
     {
         List<string> recipeIdsList = _stringTextualRepository.ReadFromFile(filePath);
 
-        var recipes = new List<Recipe>();
 
-        foreach (string recipeIds in recipeIdsList)
+        var recipes = recipeIdsList.Select(recipeIds =>
         {
-            var recipeInPorcess = new List<Ingredient>();
-            var ingredientIdList = recipeIds.Split(",");
-            foreach (string idString in ingredientIdList)
-            {
-                int Id = int.Parse(idString);
-                recipeInPorcess.Add(_ingredientRegister.GetById(Id));
-            }
-            recipes.Add(new Recipe(recipeInPorcess));
+            var ingredientList = recipeIds.Split(",").Select(id => _ingredientRegister.GetById(int.Parse(id)));
+            return new Recipe(ingredientList);
         }
+          );
 
-        return recipes;
+        return recipes.ToList();
+
     }
 
 
@@ -44,13 +40,15 @@ public class RecipesRepository : IRecipesRepository
 
     private List<string> ConvertRecipesToStrings(IEnumerable<Recipe> allRecipes)
     {
-        var result = new List<string>();
-        foreach (Recipe recipe in allRecipes)
-        {
-            string currentRecipe = string.Join(",", recipe.Ingredients.Select(ingredient => ingredient.Id));
-            result.Add(currentRecipe);
-        }
-        return result;
+
+        return allRecipes.Select(recipe => string.Join(",", recipe.Ingredients.Select(ingredient => ingredient.Id))).ToList();
+        // var result = new List<string>();
+        // foreach (Recipe recipe in allRecipes)
+        // {
+        //     string currentRecipe = string.Join(",", recipe.Ingredients.Select(ingredient => ingredient.Id));
+        //     result.Add(currentRecipe);
+        // }
+        // return result;
     }
 }
 
